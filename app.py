@@ -1,6 +1,24 @@
+# import library_generator as lg
+from my_corpus import MyCorpus as mc
 
-### 1. Preprocess corpus
-### 2. Take queries
-### 3. Run aho-corasick and generate lists of possible words in each end-points
-### 4. Call brute-force for smaller sentences
-### 5. Try randomized algorithm for larger sentences
+
+### Gets query text and returns word tokens
+def query(qText=""):
+    print(qText)
+    ### Run aho-corasick and generate lists of possible words in each end-points
+    ### Call brute-force for smaller sentences
+    ### Try randomized algorithm for larger sentences
+
+
+### Program starts from here
+# updateCorpus()
+
+# get Corpus
+lib = mc()
+
+
+# take queries
+# while(True):
+#     qText=input("Enter your query sentence: ")
+#     print('Your query: "' + qText + '"')
+#     # print(query(qText))
