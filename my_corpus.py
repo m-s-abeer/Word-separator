@@ -15,9 +15,9 @@ class MyCorpus:
     # def addCorpus(self, path):
 
 
-    def save(self):
-        self.saveWordList()
-        self.saveBigrams()
+    # def save(self):
+    #     self.saveWordList()
+    #     self.saveBigrams()
 
     # def saveWordList(self):
     #     try:
