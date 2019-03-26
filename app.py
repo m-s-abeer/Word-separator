@@ -11,33 +11,66 @@ def buildTrie():
 
 buildTrie()
 
-def bigramMatch(res):
-    cnt=int(0)
+def bigramScore(res):
+    cnt=res[0] in lib.wordList
     for i in range(1, len(res)):
         if((res[i-1], res[i]) in lib.bigrams):
-            cnt+=1
+            cnt+=2
+        # elif res[i] in lib.wordList:
+        #     cnt+=1
+        elif res[i] not in lib.wordList:
+            cnt-=1
+        # else:
+        #     cnt-=1
     return cnt
+
+results=set()
+
+def storeResult(score, line):
+    results.add((score, tuple(line)))
+
+def countChar(line):
+    ans=int(0)
+    for word in line:
+        ans+=len(word)+int(1)
+    return ans
+
+def printResult():
+    res=sorted(results, reverse=True)
+    mn=min([sc[0] for sc in res])
+    max_len=int(max(countChar(sc[1]) for sc in res))
+    # print(mn)
+    # print(res)
+    for score, line in res:
+        print("{:{x}} [Score: {}]".format(str((" ").join(line)), score-mn+1, x=max_len))
+        # print((" ").join(line), "[ Score -> ", score-mn+1, "]")
 
 def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res):
     if pos==len: #Base Case
-        # store(res)
-        print("Result: ", res, bigramMatch(res))
+        storeResult(bigramScore(res), res)
+        # print("Result: ", res, bigramScore(res))
         return None
-
+    next_words=3 # determines how many valid positions it will check
     for i in range(pos, len):
+        if not word_starts[i]:
+            continue
         for val in word_starts[i]:
             tmp=res.copy()
             if i>strt:
                 tmp.append(qText[strt:i])
             tmp.append(qText[i:i+val])
+            # print(tmp, "from", i, val)
             bruteForce(qText, word_starts, i+val, i+val, len, tmp)
-        return None
+        next_words-=1
+        if not next_words:
+            return None
 
 
 ### Gets query text and returns word tokens
 def query(qText=""):
     qText+="." #ending indicator
-    qText=qText.lower()
+    qText=qText.replace(" ", "").lower()
+    results.clear()
     # print(qText)
     ### Run aho-corasick and generate lists of possible words in each end-points
     all_result=aho.search_all(qText) # gets the list of all possible dictionary words in format(word, start_pos)
@@ -46,12 +79,15 @@ def query(qText=""):
     word_starts[-1].append(int(1))
 
     for val, pos in all_result:
-        # print(val, pos, len(val))
+        print(val, pos, len(val))
         word_starts[pos].append(int(len(val)))
     
+    print(all_result)
+    print(word_starts)
+    print(qLen)
     ### Call brute-force for smaller sentences
     bruteForce(qText, word_starts, int(0), int(0), int(qLen), [])
-
+    printResult()
     ### Try randomized algorithm for larger sentences
 
 # take queries

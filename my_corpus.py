@@ -29,10 +29,10 @@ class MyCorpus:
     def loadWordList(self):
         print("Fetching Wordlist...")
         try:
-            wf=open(self.wordListPath, "r")
+            wf=open(self.wordListPath, "r", encoding="utf-8")
         except:
-            open(self.wordListPath, "w")
-            wf=open(self.wordListPath, "r")
+            open(self.wordListPath, "w").close()
+            wf=open(self.wordListPath, "r", encoding="utf-8")
 
         for word in wf:
             for w in word.split():
@@ -49,10 +49,10 @@ class MyCorpus:
     def loadBigrams(self):
         print("Fetching Bigrams...")
         try:
-            bf=open(self.bigramPath, "r")
+            bf=open(self.bigramPath, "r", encoding="utf-8")
         except:
-            open(self.bigramPath, "w")
-            bf=open(self.bigramPath, "r")
+            open(self.bigramPath, "w").close()
+            bf=open(self.bigramPath, "r", encoding="utf-8")
 
         for line in bf:
             a, b = line.split()
