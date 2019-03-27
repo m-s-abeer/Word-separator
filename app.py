@@ -15,7 +15,7 @@ def queryAnalyzer():
     # print(results)
     return json.dumps({'query': nlq, 'data': results})
 
-@app.route('/shutdown', methods=['GET'])
+@app.route('/shutdown', methods=['GET', 'POST'])
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
@@ -29,4 +29,5 @@ def home():
     return app.send_static_file('index.html')
 
 
-app.run(port=5000)
+if __name__ == '__main__':
+    app.run()
