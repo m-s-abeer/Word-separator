@@ -1,5 +1,6 @@
 from my_corpus import MyCorpus as mc
 from ahocorapy import KeywordTree as AhoCora
+import datetime
 lib = mc()
 aho = AhoCora(case_insensitive=True)
 
@@ -9,7 +10,7 @@ def buildTrie():
     aho.finalize()
 
 buildTrie()
-print("Aho-Corasick finzlized")
+print("Aho-Corasick finalized")
 
 def bigramScore(res):
     if res[0]: cnt=int(res[0] in lib.wordList)
@@ -45,15 +46,14 @@ def printResult():
     mn=min([sc[0] for sc in results])
     res=[ [items[0]-mn+1, (" ").join(list(items[1]))] for items in list(results)]
     res.sort(key=lambda x: (-x[0], x[1].count(' ')))
-    # print("pqr: ", res)
     return res
     # print(res)
-    max_len=int(max(countChar(sc[1]) for sc in res))
-    for score, line in res:
-        print("{:{x}} [Score: {}]".format(str((" ").join(line)), score-mn+1, x=max_len))
-        # print((" ").join(line), "[ Score -> ", score-mn+1, "]")
+    # max_len=int(max(countChar(sc[1]) for sc in res))
+    # for score, line in res:
+    #     print("{:{x}} [Score: {}]".format(str((" ").join(line)), score-mn+1, x=max_len))
+    #     # print((" ").join(line), "[ Score -> ", score-mn+1, "]")
 
-def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res, next_words=2):
+def bruteForce(qText, word_starts, pos: int, len: int, res, next_words=2):
     if pos==len: #Base Case
         storeResult(bigramScore(res), res)
         # print("Result: ", res, bigramScore(res))
@@ -63,11 +63,11 @@ def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res, next_word
             continue
         for val in word_starts[i]:
             tmp=res.copy()
-            if i>strt:
-                tmp.append(qText[strt:i])
+            if i>pos:
+                tmp.append(qText[pos:i])
             tmp.append(qText[i:i+val])
             # print(tmp, "from", i, val)
-            bruteForce(qText, word_starts, i+val, i+val, len, tmp)
+            bruteForce(qText, word_starts, i+val, len, tmp)
         next_words-=1
         if not next_words:
             return None
@@ -75,6 +75,7 @@ def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res, next_word
 
 ### Gets query text and returns word tokens
 def query(qText=""):
+    print("Query taken at:", datetime.datetime.now())
     qText.replace('.', '')
     global max_score
     max_score=int(0)
@@ -91,13 +92,17 @@ def query(qText=""):
     for val, pos in all_result:
         # print(val, pos, len(val))
         word_starts[pos].append(int(len(val)))
-    
+    for item in word_starts:
+        item.sort(reverse=True)
+
     print("Word starts generated")
     # print(all_result)
     print(word_starts)
     # print(qLen)
     ### Call brute-force for smaller sentences
-    bruteForce(qText, word_starts, int(0), int(0), int(qLen), [], next_words=3)
+    bruteForce(qText, word_starts, int(0), int(qLen), [], next_words=3)
+    
+    print("Results generated at:", datetime.datetime.now())
     return printResult()
     ### Try randomized algorithm for larger sentences
 
