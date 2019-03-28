@@ -12,7 +12,8 @@ buildTrie()
 print("Aho-Corasick finzlized")
 
 def bigramScore(res):
-    cnt=res[0] in lib.wordList
+    if res[0]: cnt=int(res[0] in lib.wordList)
+    else: cnt=int(0)
     for i in range(1, len(res)):
         if((res[i-1], res[i]) in lib.bigrams):
             cnt+=6
@@ -29,7 +30,7 @@ global max_score
 
 def storeResult(score, line):
     global max_score
-    if score+15>=max_score:
+    if score+8>=max_score:
         max_score=max(max_score, score)
         results.add((score, tuple(line)))
 
@@ -40,6 +41,7 @@ def countChar(line):
     return ans
 
 def printResult():
+    if not results: return [[int(0)], "No results found"]
     mn=min([sc[0] for sc in results])
     res=[ [items[0]-mn+1, (" ").join(list(items[1]))] for items in list(results)]
     res.sort(key=lambda x: (-x[0], x[1].count(' ')))
@@ -51,13 +53,12 @@ def printResult():
         print("{:{x}} [Score: {}]".format(str((" ").join(line)), score-mn+1, x=max_len))
         # print((" ").join(line), "[ Score -> ", score-mn+1, "]")
 
-def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res):
+def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res, next_words=2):
     if pos==len: #Base Case
         storeResult(bigramScore(res), res)
         # print("Result: ", res, bigramScore(res))
         return None
-    next_words=3 # determines how many valid positions it will check
-    for i in range(pos, len):
+    for i in range(pos, min(pos+8, len)):
         if not word_starts[i]:
             continue
         for val in word_starts[i]:
@@ -96,7 +97,7 @@ def query(qText=""):
     print(word_starts)
     # print(qLen)
     ### Call brute-force for smaller sentences
-    bruteForce(qText, word_starts, int(0), int(0), int(qLen), [])
+    bruteForce(qText, word_starts, int(0), int(0), int(qLen), [], next_words=3)
     return printResult()
     ### Try randomized algorithm for larger sentences
 
