@@ -3,11 +3,10 @@ from nltk.corpus import brown
 from my_corpus import MyCorpus as mc
 
 lib=mc()
-# lib.wordList.clear()
+lib.wordList.clear()
 
 def isWord(word):
-        if(len(word)==1):
-                if(word!="a"): return False
+        if(len(word)<3): return False
         for char in word:
                 if not char.isalpha(): return False
         return True
@@ -20,7 +19,7 @@ for doc_name in cats:
         data=brown.words(categories=doc_name)
         fdist=nltk.FreqDist([w.lower() for w in data if isWord(w.lower())])
         for key in fdist.keys():
-                if(fdist[key]<2): continue
+                # if(fdist[key]<2): continue
                 res.add(key)
         # for key, data in fdist[:100]:
         #         print(key, data)

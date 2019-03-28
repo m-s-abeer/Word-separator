@@ -15,19 +15,23 @@ def bigramScore(res):
     cnt=res[0] in lib.wordList
     for i in range(1, len(res)):
         if((res[i-1], res[i]) in lib.bigrams):
-            cnt+=8
+            cnt+=6
         # elif res[i] in lib.wordList:
         #     cnt+=1
         elif res[i] not in lib.wordList:
-            cnt-=4
+            cnt-=5
         else:
             cnt+=1
     return cnt
 
 results=set()
+global max_score
 
 def storeResult(score, line):
-    results.add((score, tuple(line)))
+    global max_score
+    if score+15>=max_score:
+        max_score=max(max_score, score)
+        results.add((score, tuple(line)))
 
 def countChar(line):
     ans=int(0)
@@ -70,6 +74,9 @@ def bruteForce(qText, word_starts, pos: int, strt: int, len: int, res):
 
 ### Gets query text and returns word tokens
 def query(qText=""):
+    qText.replace('.', '')
+    global max_score
+    max_score=int(0)
     qText+="." #ending indicator
     qText=qText.replace(" ", "").lower()
     results.clear()

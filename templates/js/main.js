@@ -7,8 +7,11 @@ let printDataList = (data) => {
   console.log('printing data');
   console.log(data);
   $('#fetchedData').html('');
+  var cnt=20;
   data.forEach(element => {
+    if(cnt===0) return;
     $('#fetchedData').append('<li>'+element[1]+'[Score:'+element[0]+']'+'</li>');
+    cnt--;
   });
 }
 

@@ -32,7 +32,7 @@ def home():
 host_name = socket.gethostname() 
 
 if __name__ == '__main__':
-    # if host_name=="msabeer":
-    #     app.run(debug='True')
-    # else:
+    if host_name=="msabeer":
+        app.run(debug='True')
+    else:
         app.run()
