@@ -242,4 +242,3 @@ class KeywordTree(object):
                 deserialized_state.parent = None
             deserialized_state.transitions = {
                 key: states[value] for key, value in serialized_state['transitions'].items()}
-        self._zero_state = states[0]
