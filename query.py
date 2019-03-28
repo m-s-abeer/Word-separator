@@ -1,7 +1,5 @@
 from my_corpus import MyCorpus as mc
 from ahocorapy import KeywordTree as AhoCora
-import functools
-
 lib = mc()
 aho = AhoCora(case_insensitive=True)
 
@@ -11,18 +9,19 @@ def buildTrie():
     aho.finalize()
 
 buildTrie()
+print("Aho-Corasick finzlized")
 
 def bigramScore(res):
     cnt=res[0] in lib.wordList
     for i in range(1, len(res)):
         if((res[i-1], res[i]) in lib.bigrams):
-            cnt+=2
+            cnt+=8
         # elif res[i] in lib.wordList:
         #     cnt+=1
         elif res[i] not in lib.wordList:
-            cnt-=1
-        # else:
-        #     cnt-=1
+            cnt-=4
+        else:
+            cnt+=1
     return cnt
 
 results=set()
@@ -85,8 +84,9 @@ def query(qText=""):
         # print(val, pos, len(val))
         word_starts[pos].append(int(len(val)))
     
+    print("Word starts generated")
     # print(all_result)
-    # print(word_starts)
+    print(word_starts)
     # print(qLen)
     ### Call brute-force for smaller sentences
     bruteForce(qText, word_starts, int(0), int(0), int(qLen), [])

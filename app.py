@@ -2,9 +2,9 @@ from flask import Flask as flask, render_template, request, send_from_directory,
 import json
 import query
 import signal
+import socket
 
 app = flask(__name__,static_url_path='', static_folder='templates/')
-
 
 @app.route('/query', methods=['POST'])
 def queryAnalyzer():
@@ -29,5 +29,10 @@ def home():
     return app.send_static_file('index.html')
 
 
+host_name = socket.gethostname() 
+
 if __name__ == '__main__':
-    app.run()
+    # if host_name=="msabeer":
+    #     app.run(debug='True')
+    # else:
+        app.run()

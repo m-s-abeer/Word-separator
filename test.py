@@ -1,15 +1,34 @@
 import nltk
-from nltk.corpus import wordnet as wn
-synonyms=[]
-cnt=int(0)
-for word in wn.words():
-    print(word)
-    cnt+=1
-    if(cnt==1000):
-        break
-print(cnt)
-print("doing" in wn.words())
+from nltk.corpus import brown
+from my_corpus import MyCorpus as mc
 
-# from word_forms.word_forms import get_word_forms
-# # help(get_word_forms)
-# get_word_forms("elect")
+lib=mc()
+# lib.wordList.clear()
+
+def isWord(word):
+        if(len(word)==1):
+                if(word!="a"): return False
+        for char in word:
+                if not char.isalpha(): return False
+        return True
+
+cats=brown.categories()
+
+res=set()
+
+for doc_name in cats:
+        data=brown.words(categories=doc_name)
+        fdist=nltk.FreqDist([w.lower() for w in data if isWord(w.lower())])
+        for key in fdist.keys():
+                if(fdist[key]<2): continue
+                res.add(key)
+        # for key, data in fdist[:100]:
+        #         print(key, data)
+        # print(len(fdist))
+
+print(len(res))
+
+for word in res:
+        lib.addWord(word)
+
+lib.saveWordList()

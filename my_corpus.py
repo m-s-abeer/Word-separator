@@ -6,25 +6,51 @@ class MyCorpus:
 
     wordList=set()
     bigrams=set()
+    debug=False
 
-    def __init__(self):
+    def __init__(self, debug=False):
         self.loadWordList()
         self.loadBigrams()
+        self.debug=debug
         print("MyCorpus initiated :)\n")
 
-    # def addCorpus(self, path):
+    def saveAll(self):
+        self.saveWordList()
+        self.saveBigrams()
 
+    def addWord(self, word):
+        self.wordList.add(word)
 
-    # def save(self):
-    #     self.saveWordList()
-    #     self.saveBigrams()
+    def addBigram(self, word1, word2):
+        self.bigrams.add((word1, word2))
 
-    # def saveWordList(self):
-    #     try:
-    #         wf=open(self.wordListPath, "w")
-    #     except:
-    #         raise IOError("Can't save wordlist in file.")
-        
+    def saveWordList(self):
+        try:
+            wf=open(self.wordListPath, "w", encoding="utf-8")
+        except:
+            raise IOError("Can't save wordlist in file.")
+        for word in self.wordList:
+            wf.write(word+"\n")
+        wf.close()
+
+    def saveBigrams(self):
+        try:
+            wf=open(self.bigramPath, "w", encoding="utf-8")
+        except:
+            raise IOError("Can't save wordlist in file.")
+        for line in self.bigrams:
+            wf.write(line+"\n")
+        wf.close()
+    
+    def printAllWords(self):
+        print("Printing wordList: {}".format("<Empty>" if not self.wordList else ""))
+        for i, word in enumerate(self.wordList):
+            print(str(i+1), word)
+
+    def printAllBigrams(self):
+        print("Printing bigrams: {}".format("<Empty>" if not self.bigrams else ""))
+        for i, bigram in enumerate(self.bigrams):
+            print(str(i+1), bigram[0], bigram[1])
 
     def loadWordList(self):
         print("Fetching Wordlist...")
@@ -39,13 +65,10 @@ class MyCorpus:
                 self.wordList.add(w)
         wf.close()
 
-        ### print all words
-        print("Printing wordList: {}".format("<Empty>" if not self.wordList else ""))
-        for i, word in enumerate(self.wordList):
-            print(str(i+1), word)
-
+        if self.debug: self.printAllWords()
         print("Loaded WordList\n")
     
+
     def loadBigrams(self):
         print("Fetching Bigrams...")
         try:
@@ -59,9 +82,5 @@ class MyCorpus:
             self.bigrams.add((a, b))
         bf.close()
 
-        ### print all bigrams
-        print("Printing bigrams: {}".format("<Empty>" if not self.bigrams else ""))
-        for i, bigram in enumerate(self.bigrams):
-            print(str(i+1), bigram[0], bigram[1])
-        
+        if self.debug: self.printAllBigrams()
         print("Loaded Bigrams\n")
