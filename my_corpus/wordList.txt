@@ -35658,6 +35658,7 @@ territorial
 territories
 territory
 terror
+terrorist
 terrorists
 terrorized
 terrorizing
@@ -35696,7 +35697,6 @@ tetrahalides
 tetrameron
 tetrasodium
 teutonic
-tewfik
 tex
 texans
 texas
@@ -39951,6 +39951,7 @@ youngster
 youngsters
 younguh
 your
+youre
 yours
 yourself
 yourselves
