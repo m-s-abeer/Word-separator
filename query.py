@@ -13,17 +13,17 @@ buildTrie()
 print("Aho-Corasick finalized")
 
 def bigramScore(res):
-    if res[0]: cnt=int(res[0] in lib.wordList)
+    if res[0]: cnt=int(-1 if res[0] in lib.wordList else -3)
     else: cnt=int(0)
     for i in range(1, len(res)):
         if((res[i-1], res[i]) in lib.bigrams):
-            cnt+=6
+            cnt+=4
         # elif res[i] in lib.wordList:
         #     cnt+=1
-        elif res[i] not in lib.wordList:
-            cnt-=5
+        if res[i] not in lib.wordList:
+            cnt-=3
         else:
-            cnt+=1
+            cnt-=1
     return cnt
 
 results=set()
@@ -73,14 +73,21 @@ def bruteForce(qText, word_starts, pos: int, len: int, res, next_words=2):
             return None
 
 
+def normalize(qText):
+    ans=str()
+    for x in qText:
+        if x.isalpha():
+            ans=ans+x.lower()
+    return ans
+
 ### Gets query text and returns word tokens
 def query(qText=""):
     print("Query taken at:", datetime.datetime.now())
     qText.replace('.', '')
     global max_score
     max_score=int(0)
+    qText=normalize(qText)#qText.replace(" ", "").lower()
     qText+="." #ending indicator
-    qText=qText.replace(" ", "").lower()
     results.clear()
     # print(qText)
     ### Run aho-corasick and generate lists of possible words in each end-points
