@@ -12,18 +12,18 @@ def buildTrie():
 buildTrie()
 print("Aho-Corasick finalized")
 
-def bigramScore(res):
-    if res[0]: cnt=int(-1 if res[0] in lib.wordList else -3)
+def bigramScore(res, bigram_score=int(3), word_found=int(-2), word_not_found=int(-3)):
+    if res[0]: cnt= word_found if res[0] in lib.wordList else word_not_found
     else: cnt=int(0)
     for i in range(1, len(res)):
         if((res[i-1], res[i]) in lib.bigrams):
-            cnt+=4
+            cnt+=bigram_score
         # elif res[i] in lib.wordList:
         #     cnt+=1
         if res[i] not in lib.wordList:
-            cnt-=3
+            cnt+=word_not_found
         else:
-            cnt-=1
+            cnt+=word_found
     return cnt
 
 results=set()
@@ -58,7 +58,7 @@ def bruteForce(qText, word_starts, pos: int, len: int, res, next_words=2):
         storeResult(bigramScore(res), res)
         # print("Result: ", res, bigramScore(res))
         return None
-    for i in range(pos, min(pos+8, len)):
+    for i in range(pos, min(pos+9, len)):
         if not word_starts[i]:
             continue
         for val in word_starts[i]:
@@ -85,7 +85,7 @@ def query(qText=""):
     print("Query taken at:", datetime.datetime.now())
     qText.replace('.', '')
     global max_score
-    max_score=int(0)
+    max_score=-int(100000000)
     qText=normalize(qText)#qText.replace(" ", "").lower()
     qText+="." #ending indicator
     results.clear()
